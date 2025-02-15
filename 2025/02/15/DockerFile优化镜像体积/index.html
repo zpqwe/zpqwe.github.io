@@ -20,21 +20,23 @@
   <meta name="keywords" content="">
   
     <meta property="og:type" content="article">
-<meta property="og:title" content="测试文章">
-<meta property="og:url" content="http://example.com/2025/02/12/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/index.html">
+<meta property="og:title" content="DockerFile优化镜像体积">
+<meta property="og:url" content="http://example.com/2025/02/15/DockerFile%E4%BC%98%E5%8C%96%E9%95%9C%E5%83%8F%E4%BD%93%E7%A7%AF/index.html">
 <meta property="og:site_name" content="曾平">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://typora-syn--csdn.oss-cn-shenzhen.aliyuncs.com/test.jpg">
-<meta property="article:published_time" content="2025-02-12T07:29:43.000Z">
-<meta property="article:modified_time" content="2025-02-15T08:40:36.093Z">
+<meta property="og:image" content="http://example.com/2025/02/15/DockerFile%E4%BC%98%E5%8C%96%E9%95%9C%E5%83%8F%E4%BD%93%E7%A7%AF/Users/zpmei/AppData/Roaming/Typora/typora-user-images/image-20250215154808088.png">
+<meta property="og:image" content="http://example.com/2025/02/15/DockerFile%E4%BC%98%E5%8C%96%E9%95%9C%E5%83%8F%E4%BD%93%E7%A7%AF/Users/zpmei/AppData/Roaming/Typora/typora-user-images/image-20250215155554182.png">
+<meta property="article:published_time" content="2025-02-15T07:22:40.000Z">
+<meta property="article:modified_time" content="2025-02-15T08:41:15.322Z">
 <meta property="article:author" content="zpqwe">
-<meta property="article:tag" content="原创">
+<meta property="article:tag" content="DockerFile">
+<meta property="article:tag" content="优化镜像体积">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://typora-syn--csdn.oss-cn-shenzhen.aliyuncs.com/test.jpg">
+<meta name="twitter:image" content="http://example.com/2025/02/15/DockerFile%E4%BC%98%E5%8C%96%E9%95%9C%E5%83%8F%E4%BD%93%E7%A7%AF/Users/zpmei/AppData/Roaming/Typora/typora-user-images/image-20250215154808088.png">
   
   
   
-  <title>测试文章 - 曾平</title>
+  <title>DockerFile优化镜像体积 - 曾平</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -213,7 +215,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="测试文章"></span>
+            <span id="subtitle" data-typed-text="DockerFile优化镜像体积"></span>
           
         </div>
 
@@ -224,8 +226,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-02-12 15:29" pubdate>
-          2025年2月12日 下午
+        <time datetime="2025-02-15 15:22" pubdate>
+          2025年2月15日 下午
         </time>
       </span>
     
@@ -236,7 +238,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          8 字
+          368 字
         
       </span>
     
@@ -247,7 +249,7 @@
         
         
         
-          1 分钟
+          4 分钟
         
       </span>
     
@@ -293,13 +295,30 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">测试文章</h1>
+            <h1 id="seo-header">DockerFile优化镜像体积</h1>
             
             
               <div class="markdown-body">
                 
-                <html><head></head><body><p>这是一片测试文章</p>
-<p><img src="https://typora-syn--csdn.oss-cn-shenzhen.aliyuncs.com/test.jpg" srcset="/img/loading.gif" lazyload alt="test.jpg"></p>
+                <html><head></head><body><p>前文回顾：</p>
+<p>与昨天，也就是<a target="_blank" rel="noopener" href="https://zpqwe.github.io/2025/02/14/DockerFile%E6%9E%84%E5%BB%BASpringBoot%E9%95%9C%E5%83%8F/">上一篇文章</a>的镜像大小做一个对比</p>
+<p>可以看到，镜像大小为729MB，很庞大，明明是一个新构建的Springboot项目，怎么会这么大呢？</p>
+<p><img src="/2025/02/15/DockerFile%E4%BC%98%E5%8C%96%E9%95%9C%E5%83%8F%E4%BD%93%E7%A7%AF/Users/zpmei/AppData/Roaming/Typora/typora-user-images/image-20250215154808088.png" srcset="/img/loading.gif" lazyload alt="image-20250215154808088"></p>
+<p>这是由于基础镜像的体积太大了，所以导致构建的时候体积也非常大。</p>
+<p><strong>下面细数优化镜像体积的思路与方式</strong>：<br>
+1、尽可能选择轻量级基础镜像<br>
+2、优化镜像层缓存 (经常变动的命令放在后面构建，命令从上往下执行，这样前面的命令就会经过缓存)<br>
+3、尽可能减少层数<br>
+4/分阶段构建<br>
+5、尽量将Dockerfile相关文件放在同一目录</p>
+<p>好的，那么我们的问题就是由于第一个点引起，<strong>基础镜像太大</strong></p>
+<p><strong>优化Dockfile文件</strong></p>
+<p>创建一个 Dockerfile2</p>
+<p><code>touch Dockerfile2</code></p>
+<p><img src="/2025/02/15/DockerFile%E4%BC%98%E5%8C%96%E9%95%9C%E5%83%8F%E4%BD%93%E7%A7%AF/Users/zpmei/AppData/Roaming/Typora/typora-user-images/image-20250215155554182.png" srcset="/img/loading.gif" lazyload alt="image-20250215155554182"></p>
+<p><code>vi Dockerfile2</code></p>
+<p>编辑 Dockerfile2文件</p>
+<figure class="highlight dockerfile"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs dockerfile"><span class="hljs-comment"># 使用OpenJDK 8的JRE镜像作为基础镜像</span><br><span class="hljs-keyword">FROM</span> openjdk:<span class="hljs-number">8</span>-jre-alpine<br><br><span class="hljs-comment"># 设置工作目录</span><br><span class="hljs-keyword">WORKDIR</span><span class="language-bash"> /home/root123</span><br><br><span class="hljs-comment"># 将宿主机上已经打包好的jar包复制到容器的/app目录下</span><br><span class="hljs-comment"># 假设你的jar包名称为my-app.jar，你需要根据实际情况修改这里的文件名</span><br><span class="hljs-keyword">COPY</span><span class="language-bash"> ./demo-0.0.1-SNAPSHOT.jar /home/root123</span><br><br><span class="hljs-comment"># 声明容器在运行时将监听的端口，这里假设你的应用运行在8080端口</span><br><span class="hljs-keyword">EXPOSE</span> <span class="hljs-number">8080</span><br><br><span class="hljs-comment"># 设置容器启动时执行的命令，使用java -jar命令来运行jar包</span><br><span class="hljs-keyword">ENTRYPOINT</span><span class="language-bash"> [<span class="hljs-string">"java"</span>, <span class="hljs-string">"-jar"</span>, <span class="hljs-string">"/home/root123/demo-0.0.1-SNAPSHOT.jar"</span>]</span><br><br></code></pre></td></tr></tbody></table></figure>
 </body></html>
                 
               </div>
@@ -312,7 +331,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E5%8E%9F%E5%88%9B/" class="print-no-link">#原创</a>
+        <a href="/tags/DockerFile/" class="print-no-link">#DockerFile</a>
+      
+        <a href="/tags/%E4%BC%98%E5%8C%96%E9%95%9C%E5%83%8F%E4%BD%93%E7%A7%AF/" class="print-no-link">#优化镜像体积</a>
       
     </div>
   
@@ -324,8 +345,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>测试文章</div>
-      <div>http://example.com/2025/02/12/测试文章/</div>
+      <div>DockerFile优化镜像体积</div>
+      <div>http://example.com/2025/02/15/DockerFile优化镜像体积/</div>
     </div>
     <div class="license-meta">
       
@@ -337,7 +358,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年2月12日</div>
+          <div>2025年2月15日</div>
         </div>
       
       
@@ -369,18 +390,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/02/14/DockerFile%E6%9E%84%E5%BB%BASpringBoot%E9%95%9C%E5%83%8F/" title="DockerFile构建SpringBoot镜像">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">DockerFile构建SpringBoot镜像</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/02/12/hello-world/" title="Hello World">
-                        <span class="hidden-mobile">Hello World</span>
+                      <a href="/2025/02/15/%E5%85%B3%E4%BA%8ETypora-md%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0CSDN%E5%9B%BE%E7%89%87%E4%BC%9A%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/" title="关于Typora.md文件上传CSDN图片会失效问题">
+                        <span class="hidden-mobile">关于Typora.md文件上传CSDN图片会失效问题</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

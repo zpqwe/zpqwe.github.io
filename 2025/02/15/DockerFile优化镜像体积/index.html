@@ -24,15 +24,19 @@
 <meta property="og:url" content="http://example.com/2025/02/15/DockerFile%E4%BC%98%E5%8C%96%E9%95%9C%E5%83%8F%E4%BD%93%E7%A7%AF/index.html">
 <meta property="og:site_name" content="曾平">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2025/02/15/DockerFile%E4%BC%98%E5%8C%96%E9%95%9C%E5%83%8F%E4%BD%93%E7%A7%AF/Users/zpmei/AppData/Roaming/Typora/typora-user-images/image-20250215154808088.png">
-<meta property="og:image" content="http://example.com/2025/02/15/DockerFile%E4%BC%98%E5%8C%96%E9%95%9C%E5%83%8F%E4%BD%93%E7%A7%AF/Users/zpmei/AppData/Roaming/Typora/typora-user-images/image-20250215155554182.png">
+<meta property="og:image" content="https://typora-syn--csdn.oss-cn-shenzhen.aliyuncs.com/image-20250215154808088.png">
+<meta property="og:image" content="https://typora-syn--csdn.oss-cn-shenzhen.aliyuncs.com/image-20250215155554182.png">
+<meta property="og:image" content="https://typora-syn--csdn.oss-cn-shenzhen.aliyuncs.com/image-20250215164914104.png">
+<meta property="og:image" content="https://typora-syn--csdn.oss-cn-shenzhen.aliyuncs.com/image-20250215165237555.png">
+<meta property="og:image" content="https://typora-syn--csdn.oss-cn-shenzhen.aliyuncs.com/image-20250215165553029.png">
+<meta property="og:image" content="https://typora-syn--csdn.oss-cn-shenzhen.aliyuncs.com/image-20250215165724327.png">
 <meta property="article:published_time" content="2025-02-15T07:22:40.000Z">
-<meta property="article:modified_time" content="2025-02-15T08:41:15.322Z">
+<meta property="article:modified_time" content="2025-02-15T09:27:54.365Z">
 <meta property="article:author" content="zpqwe">
 <meta property="article:tag" content="DockerFile">
 <meta property="article:tag" content="优化镜像体积">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/2025/02/15/DockerFile%E4%BC%98%E5%8C%96%E9%95%9C%E5%83%8F%E4%BD%93%E7%A7%AF/Users/zpmei/AppData/Roaming/Typora/typora-user-images/image-20250215154808088.png">
+<meta name="twitter:image" content="https://typora-syn--csdn.oss-cn-shenzhen.aliyuncs.com/image-20250215154808088.png">
   
   
   
@@ -238,7 +242,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          368 字
+          620 字
         
       </span>
     
@@ -249,7 +253,7 @@
         
         
         
-          4 分钟
+          6 分钟
         
       </span>
     
@@ -300,25 +304,47 @@
             
               <div class="markdown-body">
                 
-                <html><head></head><body><p>前文回顾：</p>
+                <html><head></head><body><p><a href="">原文</a></p>
+<h1>DockerFile优化镜像体积</h1>
+<h2 id="前文回顾：">前文回顾：</h2>
 <p>与昨天，也就是<a target="_blank" rel="noopener" href="https://zpqwe.github.io/2025/02/14/DockerFile%E6%9E%84%E5%BB%BASpringBoot%E9%95%9C%E5%83%8F/">上一篇文章</a>的镜像大小做一个对比</p>
 <p>可以看到，镜像大小为729MB，很庞大，明明是一个新构建的Springboot项目，怎么会这么大呢？</p>
-<p><img src="/2025/02/15/DockerFile%E4%BC%98%E5%8C%96%E9%95%9C%E5%83%8F%E4%BD%93%E7%A7%AF/Users/zpmei/AppData/Roaming/Typora/typora-user-images/image-20250215154808088.png" srcset="/img/loading.gif" lazyload alt="image-20250215154808088"></p>
-<p>这是由于基础镜像的体积太大了，所以导致构建的时候体积也非常大。</p>
-<p><strong>下面细数优化镜像体积的思路与方式</strong>：<br>
-1、尽可能选择轻量级基础镜像<br>
+<p><img src="https://typora-syn--csdn.oss-cn-shenzhen.aliyuncs.com/image-20250215154808088.png" srcset="/img/loading.gif" lazyload alt="image-20250215154808088"></p>
+<p>排查发现，这是由于基础镜像的体积太大了，所以导致构建的时候体积也非常大。</p>
+<h2 id="一、细数优化镜像体积的思路与方式">一、细数优化镜像体积的思路与方式</h2>
+<p>1、尽可能选择轻量级基础镜像<br>
 2、优化镜像层缓存 (经常变动的命令放在后面构建，命令从上往下执行，这样前面的命令就会经过缓存)<br>
 3、尽可能减少层数<br>
 4/分阶段构建<br>
 5、尽量将Dockerfile相关文件放在同一目录</p>
 <p>好的，那么我们的问题就是由于第一个点引起，<strong>基础镜像太大</strong></p>
-<p><strong>优化Dockfile文件</strong></p>
+<h2 id="二、优化Dockfile文件">二、<strong>优化Dockfile文件</strong></h2>
 <p>创建一个 Dockerfile2</p>
 <p><code>touch Dockerfile2</code></p>
-<p><img src="/2025/02/15/DockerFile%E4%BC%98%E5%8C%96%E9%95%9C%E5%83%8F%E4%BD%93%E7%A7%AF/Users/zpmei/AppData/Roaming/Typora/typora-user-images/image-20250215155554182.png" srcset="/img/loading.gif" lazyload alt="image-20250215155554182"></p>
+<p><img src="https://typora-syn--csdn.oss-cn-shenzhen.aliyuncs.com/image-20250215155554182.png" srcset="/img/loading.gif" lazyload alt="image-20250215155554182"></p>
 <p><code>vi Dockerfile2</code></p>
-<p>编辑 Dockerfile2文件</p>
+<h3 id="编辑-Dockerfile2文件">编辑 Dockerfile2文件</h3>
 <figure class="highlight dockerfile"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs dockerfile"><span class="hljs-comment"># 使用OpenJDK 8的JRE镜像作为基础镜像</span><br><span class="hljs-keyword">FROM</span> openjdk:<span class="hljs-number">8</span>-jre-alpine<br><br><span class="hljs-comment"># 设置工作目录</span><br><span class="hljs-keyword">WORKDIR</span><span class="language-bash"> /home/root123</span><br><br><span class="hljs-comment"># 将宿主机上已经打包好的jar包复制到容器的/app目录下</span><br><span class="hljs-comment"># 假设你的jar包名称为my-app.jar，你需要根据实际情况修改这里的文件名</span><br><span class="hljs-keyword">COPY</span><span class="language-bash"> ./demo-0.0.1-SNAPSHOT.jar /home/root123</span><br><br><span class="hljs-comment"># 声明容器在运行时将监听的端口，这里假设你的应用运行在8080端口</span><br><span class="hljs-keyword">EXPOSE</span> <span class="hljs-number">8080</span><br><br><span class="hljs-comment"># 设置容器启动时执行的命令，使用java -jar命令来运行jar包</span><br><span class="hljs-keyword">ENTRYPOINT</span><span class="language-bash"> [<span class="hljs-string">"java"</span>, <span class="hljs-string">"-jar"</span>, <span class="hljs-string">"/home/root123/demo-0.0.1-SNAPSHOT.jar"</span>]</span><br><br></code></pre></td></tr></tbody></table></figure>
+<p>通过Dockerfile2 这个文件再构建一次Springboot应用,输入命令，执行成功。</p>
+<p><strong><font color="red">温馨提示</font></strong>：本篇文章需要结合上篇文章<a target="_blank" rel="noopener" href="https://zpqwe.github.io/2025/02/14/DockerFile%E6%9E%84%E5%BB%BASpringBoot%E9%95%9C%E5%83%8F/">DockerFile构建SpringBoot镜像</a>看效果更好</p>
+<h2 id="三、构建镜像">三、构建镜像</h2>
+<p><code>docker build -t mydemo:v1 -f Dockerfile2 .</code></p>
+<p><img src="https://typora-syn--csdn.oss-cn-shenzhen.aliyuncs.com/image-20250215164914104.png" srcset="/img/loading.gif" lazyload alt="image-20250215164914104"></p>
+<p>镜像构建成功！</p>
+<p>通过 <code>docker images</code> 查看镜像大小，可以看到只有103MB，比原来小了500多MB，优化了将近7.08倍。</p>
+<p>换句话说，文件大小减少了大约86%</p>
+<p><img src="https://typora-syn--csdn.oss-cn-shenzhen.aliyuncs.com/image-20250215165237555.png" srcset="/img/loading.gif" lazyload alt="image-20250215165237555"></p>
+<p>好的，现在执行该镜像，看看效果是不是正常呢？</p>
+<h2 id="四、运行镜像">四、运行镜像</h2>
+<p><code>docker run -d -p 8091:8080 --name=mydemo 7f46db56915e</code></p>
+<p>通过 d<code>ocker ps</code> 可以看到，镜像正常执行。</p>
+<p><img src="https://typora-syn--csdn.oss-cn-shenzhen.aliyuncs.com/image-20250215165553029.png" srcset="/img/loading.gif" lazyload alt="image-20250215165553029"></p>
+<p>我们再去通过浏览器去访问一下应用是否能正常返回？</p>
+<h2 id="五、查看运行效果">五、查看运行效果</h2>
+<p>没问题！应用正常返回成功。</p>
+<p><img src="https://typora-syn--csdn.oss-cn-shenzhen.aliyuncs.com/image-20250215165724327.png" srcset="/img/loading.gif" lazyload alt="image-20250215165724327"></p>
+<p>由此可见，通过Dockerfile的优化技巧，将镜像体积给缩小了，更多Dockerfile技巧也可以互相交流。</p>
+<p>OK，希望这篇文章可以对你起到帮助。</p>
 </body></html>
                 
               </div>

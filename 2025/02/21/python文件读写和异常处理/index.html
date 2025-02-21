@@ -1,0 +1,778 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="zpqwe">
+  <meta name="keywords" content="">
+  
+    <meta property="og:type" content="article">
+<meta property="og:title" content="python文件读写和异常处理">
+<meta property="og:url" content="http://example.com/2025/02/21/python%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99%E5%92%8C%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/index.html">
+<meta property="og:site_name" content="曾平">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://typora-syn--csdn.oss-cn-shenzhen.aliyuncs.com/image-20250221163856019.png">
+<meta property="og:image" content="https://typora-syn--csdn.oss-cn-shenzhen.aliyuncs.com/image-20250221170823613.png">
+<meta property="og:image" content="https://typora-syn--csdn.oss-cn-shenzhen.aliyuncs.com/image-20250221173702118.png">
+<meta property="article:published_time" content="2025-02-21T08:36:40.000Z">
+<meta property="article:modified_time" content="2025-02-21T16:39:51.257Z">
+<meta property="article:author" content="zpqwe">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="文件读写">
+<meta property="article:tag" content="异常处理">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://typora-syn--csdn.oss-cn-shenzhen.aliyuncs.com/image-20250221163856019.png">
+  
+  
+  
+  <title>python文件读写和异常处理 - 曾平</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"TpxR1ejSmG0CzDF2fDPxTXKc-gzGzoHsz","app_key":"kJhIVleqaH3pwDpaJOqOCHAj","server_url":"https://tpxr1ejs.lc-cn-n1-shared.com","path":"window.location.pathname.replace(/\\/$/, '')","ignore_local":true},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"gtag":null,"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>曾平</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="python文件读写和异常处理"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-02-21 16:36" pubdate>
+          2025年2月21日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          26 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span>次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">python文件读写和异常处理</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <html><head></head><body><p><strong>python处理文件读写，CVS文件、Excel文件、Word文件，操作PDF文件</strong></p>
+<h2 id="文件读写和异常处理">文件读写和异常处理</h2>
+<h3 id="1、打开和关闭文件">1、打开和关闭文件</h3>
+<p><code>open</code> 函数</p>
+<p><img src="https://typora-syn--csdn.oss-cn-shenzhen.aliyuncs.com/image-20250221163856019.png" srcset="/img/loading.gif" lazyload alt="image-20250221163856019"></p>
+<h4 id="2、读写文本文件">2、读写文本文件</h4>
+<p>二者对比，少了finally块中的代码，代码变得优雅了，不会出现忘记关闭io流的情况</p>
+<p><img src="https://typora-syn--csdn.oss-cn-shenzhen.aliyuncs.com/image-20250221170823613.png" srcset="/img/loading.gif" lazyload alt="image-20250221170823613"></p>
+<h4 id="3、读写二进制文件">3、读写二进制文件</h4>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">try</span>:<br>    <span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(<span class="hljs-string">'QQ图片20210731200950.jpg'</span>,<span class="hljs-string">'rb'</span>) <span class="hljs-keyword">as</span> f:<br>        data=f.read()<br>    <span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(<span class="hljs-string">'泷.jpg'</span>,<span class="hljs-string">'wb'</span>) <span class="hljs-keyword">as</span> f:<br>        f.write(data)<br><span class="hljs-keyword">except</span> FileNotFoundError:<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">'指定的文件无法打开'</span>)<br><span class="hljs-keyword">except</span> IOError:<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">'读写文件时出现错误'</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">'程序执行错误'</span>)<br></code></pre></td></tr></tbody></table></figure>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#如果要复制的图片很大，一次将文件内容读入内存可能会造成非常大的内存开销，为了减少对内存的占用，</span><br><span class="hljs-comment"># 可以为read方法传入size参数来指定每次读取的字节数</span><br><span class="hljs-keyword">try</span>:<br>    <span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(<span class="hljs-string">"QQ图片20210731200950.jpg"</span>,<span class="hljs-string">"rb"</span>) <span class="hljs-keyword">as</span> f1,<span class="hljs-built_in">open</span>(<span class="hljs-string">'泷2.jpg'</span>,<span class="hljs-string">'wb'</span>) <span class="hljs-keyword">as</span> f2:<br>        data=f1.read(<span class="hljs-number">512</span>)<br>        <span class="hljs-keyword">while</span> data:<br>            f2.write(data)<br>            data = f1.read(<span class="hljs-number">512</span>)<br><span class="hljs-keyword">except</span> FileNotFoundError:<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">'指定的文件无法打开'</span>)<br><span class="hljs-keyword">except</span> IOError:<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">'读写文件时出现错误'</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">'程序执行结束'</span>)<br></code></pre></td></tr></tbody></table></figure>
+<h4 id="对象的序列化和反序列化">对象的序列化和反序列化</h4>
+<p><code>python</code>和<code>javascript</code>数据类型对应关系</p>
+<p><img src="https://typora-syn--csdn.oss-cn-shenzhen.aliyuncs.com/image-20250221173702118.png" srcset="/img/loading.gif" lazyload alt="image-20250221173702118"></p>
+<p><strong>对象的序列号和反序列化</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#对象序列号和反序列化</span><br><span class="hljs-keyword">import</span> json<br><br><span class="hljs-comment">#读写json格式的数据</span><br>my_dict = {<br>    <span class="hljs-string">'name'</span>: <span class="hljs-string">'骆昊'</span>,<br>    <span class="hljs-string">'age'</span>: <span class="hljs-number">40</span>,<br>    <span class="hljs-string">'friends'</span>: [<span class="hljs-string">'王大锤'</span>, <span class="hljs-string">'白元芳'</span>],<br>    <span class="hljs-string">'cars'</span>: [<br>        {<span class="hljs-string">'brand'</span>: <span class="hljs-string">'BMW'</span>, <span class="hljs-string">'max_speed'</span>: <span class="hljs-number">240</span>},<br>        {<span class="hljs-string">'brand'</span>: <span class="hljs-string">'Audi'</span>, <span class="hljs-string">'max_speed'</span>: <span class="hljs-number">280</span>},<br>        {<span class="hljs-string">'brand'</span>: <span class="hljs-string">'Benz'</span>, <span class="hljs-string">'max_speed'</span>: <span class="hljs-number">280</span>}<br>    ]<br>}<br><span class="hljs-comment"># print(json.dumps(my_dict))</span><br><span class="hljs-comment">#如果要将字典处理成JSON格式并写入文本文件，只需要将dumps函数换成dump函数并传入文件对象即可，代码如下所示。</span><br><span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(<span class="hljs-string">'my_dict.json'</span>, <span class="hljs-string">'w'</span>) <span class="hljs-keyword">as</span> f:<br>    json.dump(my_dict, f)<br></code></pre></td></tr></tbody></table></figure>
+<p><code>json</code>模块有四个比较重要的函数，分别是：</p>
+<ul>
+<li><code>dump</code> - 将Python对象按照JSON格式序列化到文件中</li>
+<li><code>dumps</code> - 将Python对象处理成JSON格式的字符串</li>
+<li><code>load</code> - 将文件中的JSON数据反序列化成对象</li>
+<li><code>loads</code> - 将字符串的内容反序列化成Python对象</li>
+</ul>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(<span class="hljs-string">'my_dict.json'</span>, <span class="hljs-string">'r'</span>) <span class="hljs-keyword">as</span> f:<br>    <span class="hljs-built_in">dict</span>=json.load(f)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-built_in">type</span>(<span class="hljs-built_in">dict</span>))<br>    <span class="hljs-built_in">print</span>(<span class="hljs-built_in">dict</span>)<br></code></pre></td></tr></tbody></table></figure>
+<h4 id="包管理工具">包管理工具</h4>
+<p>Python标准库中的<code>json</code>模块在数据序列化和反序列化时性能并不是非常理想，为了解决这个问题，可以使用三方库<code>ujson</code>来替换<code>json</code>。所谓三方库，是指非公司内部开发和使用的，也不是来自于官方标准库的Python模块，这些模块通常由其他公司、组织或个人开发，所以被称为三方库。虽然Python语言的标准库虽然已经提供了诸多模块来方便我们的开发，但是对于一个强大的语言来说，它的生态圈一定也是非常繁荣的。</p>
+<p>之前安装Python解释器时，默认情况下已经勾选了安装pip，大家可以在命令提示符或终端中通过<code>pip --version</code>来确定是否已经拥有了pip。pip是Python的包管理工具，通过pip可以查找、安装、卸载、更新Python的三方库或工具，macOS和Linux系统应该使用pip3。例如要安装替代<code>json</code>模块的<code>ujson</code>，可以使用下面的命令。</p>
+<h3 id="2、使用网络API获取数据">2、使用网络API获取数据</h3>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 基本参数配置</span><br>apiUrl = <span class="hljs-string">'http://v.juhe.cn/toutiao/index'</span>  <span class="hljs-comment"># 接口请求URL</span><br>apiKey = <span class="hljs-string">''</span>  <span class="hljs-comment"># 在个人中心-&gt;我的数据,接口名称上方查看</span><br><br><span class="hljs-comment"># 接口请求入参配置</span><br>requestParams = {<br>    <span class="hljs-string">'key'</span>: apiKey,<br>    <span class="hljs-string">'type'</span>: <span class="hljs-string">''</span>,<br>    <span class="hljs-string">'page'</span>: <span class="hljs-string">''</span>,<br>    <span class="hljs-string">'page_size'</span>: <span class="hljs-string">''</span>,<br>    <span class="hljs-string">'is_filter'</span>: <span class="hljs-string">''</span>,<br>}<br><span class="hljs-comment"># 发起接口网络请求</span><br>response = requests.get(apiUrl, params=requestParams)<br><br><span class="hljs-comment"># 解析响应结果</span><br><span class="hljs-keyword">if</span> response.status_code == <span class="hljs-number">200</span>:<br>    responseResult = response.json()<br>    <span class="hljs-comment"># 网络请求成功。可依据业务逻辑和接口文档说明自行处理。</span><br>    <span class="hljs-built_in">print</span>(responseResult)<br>    <span class="hljs-keyword">for</span> data <span class="hljs-keyword">in</span> responseResult[<span class="hljs-string">'result'</span>][<span class="hljs-string">'data'</span>]:<br>        <span class="hljs-built_in">print</span>(data)<br><span class="hljs-keyword">else</span>:<br>    <span class="hljs-comment"># 网络异常等因素，解析结果异常。可依据业务逻辑自行处理。</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">'请求异常'</span>)<br></code></pre></td></tr></tbody></table></figure>
+<h3 id="3、操作CVS">3、操作CVS</h3>
+<h4 id="将数据写入CSV文件">将数据写入CSV文件</h4>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 将数据写入CSV文件</span><br><span class="hljs-keyword">import</span> csv<br><span class="hljs-keyword">import</span> random<br><br><span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(<span class="hljs-string">'hello.csv'</span>,<span class="hljs-string">'w'</span>,newline=<span class="hljs-string">''</span>) <span class="hljs-keyword">as</span> f:<br>    writer = csv.writer(f)<br>    writer.writerow([<span class="hljs-string">'姓名'</span>,<span class="hljs-string">'语文'</span>,<span class="hljs-string">'数学'</span>,<span class="hljs-string">'英语'</span>])<br>    names=[<span class="hljs-string">'关羽'</span>,<span class="hljs-string">'赵云'</span>,<span class="hljs-string">'马超'</span>,<span class="hljs-string">'黄忠'</span>]<br>    <span class="hljs-keyword">for</span> name <span class="hljs-keyword">in</span> names:<br>        scores=[random.randrange(<span class="hljs-number">50</span>,<span class="hljs-number">101</span>) <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">3</span>)]<br>        scores.insert(<span class="hljs-number">0</span>,name)<br>        writer.writerow(scores)<br></code></pre></td></tr></tbody></table></figure>
+<h4 id="从CSV文件读取数据">从CSV文件读取数据</h4>
+<figure class="highlight routeros"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-comment">#读取CVS文件</span><br>with open(<span class="hljs-string">'hello.csv'</span>,<span class="hljs-string">'r'</span>,<span class="hljs-attribute">newline</span>=<span class="hljs-string">''</span>) as f:<br>    <span class="hljs-attribute">reader</span>=csv.reader(f,delimiter='|',quoting=csv.QUOTE_ALL)<br>    <span class="hljs-keyword">for</span> data_list <span class="hljs-keyword">in</span> reader:<br>        <span class="hljs-built_in">print</span>(reader.line_num, <span class="hljs-attribute">end</span>=<span class="hljs-string">'\t'</span>)<br>        <span class="hljs-built_in">print</span>(data_list)<br>        # <span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> data_list:<br>        #     <span class="hljs-built_in">print</span>(item,<span class="hljs-attribute">end</span>=<span class="hljs-string">'\t'</span>)<br></code></pre></td></tr></tbody></table></figure>
+<p>将来如果大家使用Python做数据分析，很有可能会用到名为<code>pandas</code>的三方库，它是Python数据分析的神器之一。<code>pandas</code>中封装了名为<code>read_csv</code>和<code>to_csv</code>的函数用来读写CSV文件，其中<code>read_CSV</code>会将读取到的数据变成一个<code>DataFrame</code>对象，而<code>DataFrame</code>就是<code>pandas</code>库中最重要的类型，它封装了一系列用于数据处理的方法（清洗、转换、聚合等）；而<code>to_csv</code>会将<code>DataFrame</code>对象中的数据写入CSV文件，完成数据的持久化。<code>read_csv</code>函数和<code>to_csv</code>函数远远比原生的<code>csvreader</code>和<code>csvwriter</code>强大。</p>
+<h3 id="4、操作Excel文件">4、操作Excel文件</h3>
+<h4 id="Python读写Excel文件-1">Python读写Excel文件-1</h4>
+<p>本章我们先讲解基于<code>xlwt</code>和<code>xlrd</code>操作 Excel 文件，大家可以先使用下面的命令安装这两个三方库以及配合使用的工具模块<code>xlutils</code>。</p>
+<figure class="highlight cmake"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake">pip <span class="hljs-keyword">install</span> xlwt xlrd xlutils<br></code></pre></td></tr></tbody></table></figure>
+<h4 id="读Excel文件">读Excel文件</h4>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> openpyxl<br><span class="hljs-keyword">from</span> openpyxl.utils <span class="hljs-keyword">import</span> get_column_letter<br><span class="hljs-keyword">from</span> datetime <span class="hljs-keyword">import</span> datetime<br><br><span class="hljs-comment"># 使用openpyxl库的load_workbook函数打开指定Excel文件并获得Workbook对象（工作簿）</span><br>wb = openpyxl.load_workbook(<span class="hljs-string">'2022年股票数据.xlsx'</span>)  <span class="hljs-comment"># 请确保文件名和路径正确</span><br><br><span class="hljs-comment"># 通过Workbook对象的sheetnames属性可以获取所有表单名称</span><br>sheetnames = wb.sheetnames<br><span class="hljs-built_in">print</span>(<span class="hljs-string">"工作表名称："</span>, sheetnames)<br><br><span class="hljs-comment"># 选择第一个工作表（您也可以根据名称选择特定的工作表）</span><br>sheet = wb[sheetnames[<span class="hljs-number">0</span>]]<br><br><span class="hljs-comment"># 获取表单的行数和列数（注意：openpyxl没有直接的nrows和ncols属性，但可以通过max_row和max_column获取）</span><br>max_row = sheet.max_row<br>max_column = sheet.max_column<br><span class="hljs-built_in">print</span>(<span class="hljs-string">"行数："</span>, max_row, <span class="hljs-string">"列数："</span>, max_column)<br><br><span class="hljs-comment"># 遍历每一行和每一列，获取单元格中的值并进行格式化处理</span><br><span class="hljs-keyword">for</span> row <span class="hljs-keyword">in</span> sheet.iter_rows(values_only=<span class="hljs-literal">True</span>):<br>    <span class="hljs-keyword">for</span> col_idx, value <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(row):<br>        <span class="hljs-comment"># 对除首行外的其他行进行数据格式化处理</span><br>        <span class="hljs-keyword">if</span> row[<span class="hljs-number">0</span>] <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span> <span class="hljs-keyword">and</span> row[<span class="hljs-number">0</span>] != sheet.cell(row=<span class="hljs-number">1</span>, column=<span class="hljs-number">1</span>).value:  <span class="hljs-comment"># 假设第一行为标题行</span><br>            <span class="hljs-comment"># 第1列的日期类型先转成datetime对象再格式化为“年月日”的格式</span><br>            <span class="hljs-keyword">if</span> col_idx == <span class="hljs-number">0</span>:<br>                <span class="hljs-comment"># openpyxl读取的日期是datetime对象（如果单元格格式正确的话）</span><br>                <span class="hljs-comment"># 这里我们直接进行格式化</span><br>                value = value.strftime(<span class="hljs-string">'%Y年%m月%d日'</span>) <span class="hljs-keyword">if</span> <span class="hljs-built_in">isinstance</span>(value, datetime) <span class="hljs-keyword">else</span> value<br>            <span class="hljs-comment"># 其他列的number类型处理成小数点后保留两位有效数字的浮点数（如果已经是字符串则不处理）</span><br>            <span class="hljs-keyword">elif</span> <span class="hljs-built_in">isinstance</span>(value, (<span class="hljs-built_in">int</span>, <span class="hljs-built_in">float</span>)):<br>                value = <span class="hljs-string">f'<span class="hljs-subst">{value:<span class="hljs-number">.2</span>f}</span>'</span><br><br>        <span class="hljs-comment"># 打印值，使用制表符分隔</span><br>        <span class="hljs-built_in">print</span>(value, end=<span class="hljs-string">'\t'</span>)<br>    <span class="hljs-built_in">print</span>()<br><br><span class="hljs-comment"># 完成后关闭工作簿（可选，但推荐执行以释放资源）</span><br>wb.close()<br></code></pre></td></tr></tbody></table></figure>
+<h4 id="写Excel文件">写Excel文件</h4>
+<figure class="highlight stylus"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs stylus">#写入excel文件<br>student_names=<span class="hljs-selector-attr">[<span class="hljs-string">'关羽'</span>,<span class="hljs-string">'张飞'</span>,<span class="hljs-string">'赵云'</span>,<span class="hljs-string">'马超'</span>,<span class="hljs-string">'黄忠'</span>]</span><br>scores=<span class="hljs-selector-attr">[[random.randrange(50,101) for _ in range(3)]</span> <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">5</span>)]<br>wb=xlwt<span class="hljs-selector-class">.Workbook</span>()<br>sheet=wb<span class="hljs-selector-class">.add_sheet</span>(<span class="hljs-string">'一年级二班'</span>)<br>titles=(<span class="hljs-string">'姓名'</span>,<span class="hljs-string">'语文'</span>,<span class="hljs-string">'数学'</span>,<span class="hljs-string">'英语'</span>)<br><br><span class="hljs-keyword">for</span> index,title <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(titles):<br>    sheet<span class="hljs-selector-class">.write</span>(<span class="hljs-number">0</span>,index,title)<br>sheet=<span class="hljs-built_in">header_style</span>()<br><br><span class="hljs-keyword">for</span> row <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(scores)):<br>    sheet<span class="hljs-selector-class">.write</span>(row+<span class="hljs-number">1</span>,<span class="hljs-number">0</span>,student_names<span class="hljs-selector-attr">[row]</span>)<br>    <span class="hljs-keyword">for</span> col <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(scores<span class="hljs-selector-attr">[row]</span>)):<br>        sheet<span class="hljs-selector-class">.write</span>(row+<span class="hljs-number">1</span>,col+<span class="hljs-number">1</span>,scores<span class="hljs-selector-attr">[row]</span><span class="hljs-selector-attr">[col]</span>)<br>#保存工作簿<br>wb<span class="hljs-selector-class">.save</span>(<span class="hljs-string">'考试成绩表.xls'</span>)<br></code></pre></td></tr></tbody></table></figure>
+<h4 id="调整单元格样式">调整单元格样式</h4>
+<figure class="highlight sas"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs sas">def header_style():<br>    header_style = xlwt.XFStyle()<br>    pattern = xlwt.Patter<span class="hljs-meta">n</span>()<br>    pattern.pattern = xlwt.Pattern.SOLID_PATTERN<br>    # 0 - 黑色、1 - 白色、2 - 红色、3 - 绿色、4 - 蓝色、5 - 黄色、6 - 粉色、7 - 青色<br>    pattern.pattern_fore_colour = 5<br>    header_style.pattern = pattern<br>    titles = (<span class="hljs-string">'姓名'</span>, <span class="hljs-string">'语文'</span>, <span class="hljs-string">'数学'</span>, <span class="hljs-string">'英语'</span>)<br>    for <span class="hljs-keyword">index</span>, <span class="hljs-keyword">title</span> <span class="hljs-keyword">in</span> enumerate(titles):<br>        sheet.write(0, <span class="hljs-keyword">index</span>, <span class="hljs-keyword">title</span>, header_style)<br>    <span class="hljs-keyword">return</span> sheet<br></code></pre></td></tr></tbody></table></figure>
+<h4 id="调整单元格样式-2">调整单元格样式</h4>
+<figure class="highlight sas"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs sas">header_style = xlwt.XFStyle()<br>pattern = xlwt.Patter<span class="hljs-meta">n</span>()<br>pattern.pattern = xlwt.Pattern.SOLID_PATTERN<br># 0 - 黑色、1 - 白色、2 - 红色、3 - 绿色、4 - 蓝色、5 - 黄色、6 - 粉色、7 - 青色<br>pattern.pattern_fore_colour = 5<br>header_style.pattern = pattern<br>titles = (<span class="hljs-string">'姓名'</span>, <span class="hljs-string">'语文'</span>, <span class="hljs-string">'数学'</span>, <span class="hljs-string">'英语'</span>)<br>for <span class="hljs-keyword">index</span>, <span class="hljs-keyword">title</span> <span class="hljs-keyword">in</span> enumerate(titles):<br>    sheet.write(0, <span class="hljs-keyword">index</span>, <span class="hljs-keyword">title</span>, header_style)<br></code></pre></td></tr></tbody></table></figure>
+<p>调整文字样式</p>
+<figure class="highlight routeros"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs routeros">def font_size(header_style):<br>    <span class="hljs-attribute">font</span>=xlwt.Font()<br>    font.<span class="hljs-attribute">name</span>=<span class="hljs-string">'华文楷体'</span><br>    font.<span class="hljs-attribute">height</span>=20*18<br>    font.<span class="hljs-attribute">bold</span>=<span class="hljs-literal">True</span><br>    font.<span class="hljs-attribute">italic</span>=<span class="hljs-literal">False</span><br>    font.<span class="hljs-attribute">color_index</span>=1<br>    header_style.<span class="hljs-attribute">font</span>=font<br>    return header_style<br></code></pre></td></tr></tbody></table></figure>
+<p>完整代码块</p>
+<figure class="highlight scss"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs scss">def <span class="hljs-built_in">font_size</span>(header_style):<br>    font=xlwt.<span class="hljs-built_in">Font</span>()<br>    font.name=<span class="hljs-string">'华文楷体'</span><br>    font.height=<span class="hljs-number">20</span>*<span class="hljs-number">18</span><br>    font.bold=True<br>    font.italic=False<br>    font.color_index=<span class="hljs-number">1</span><br>    header_style.font=font<br>    return header_style<br>def <span class="hljs-built_in">header_style</span>():<br>    header_style = xlwt.<span class="hljs-built_in">XFStyle</span>()<br>    pattern = xlwt.<span class="hljs-built_in">Pattern</span>()<br>    pattern.pattern = xlwt.Pattern.SOLID_PATTERN<br>    # <span class="hljs-number">0</span> - 黑色、<span class="hljs-number">1</span> - 白色、<span class="hljs-number">2</span> - 红色、<span class="hljs-number">3</span> - 绿色、<span class="hljs-number">4</span> - 蓝色、<span class="hljs-number">5</span> - 黄色、<span class="hljs-number">6</span> - 粉色、<span class="hljs-number">7</span> - 青色<br>    pattern.pattern_fore_colour = <span class="hljs-number">5</span><br>    header_style.pattern = pattern<br>    header_style=<span class="hljs-built_in">font_size</span>(header_style)<br>    titles = (<span class="hljs-string">'姓名'</span>, <span class="hljs-string">'语文'</span>, <span class="hljs-string">'数学'</span>, <span class="hljs-string">'英语'</span>)<br>    for index, title in <span class="hljs-built_in">enumerate</span>(titles):<br>        sheet.<span class="hljs-built_in">write</span>(<span class="hljs-number">0</span>, index, title, header_style)<br>    return sheet<br><br>#写入excel文件<br>student_names=[<span class="hljs-string">'关羽'</span>,<span class="hljs-string">'张飞'</span>,<span class="hljs-string">'赵云'</span>,<span class="hljs-string">'马超'</span>,<span class="hljs-string">'黄忠'</span>]<br>scores=[[random.<span class="hljs-built_in">randrange</span>(<span class="hljs-number">50</span>,<span class="hljs-number">101</span>) for _ in <span class="hljs-built_in">range</span>(<span class="hljs-number">3</span>)] for _ in <span class="hljs-built_in">range</span>(<span class="hljs-number">5</span>)]<br>wb=xlwt.<span class="hljs-built_in">Workbook</span>()<br>sheet=wb.<span class="hljs-built_in">add_sheet</span>(<span class="hljs-string">'一年级二班'</span>)<br># titles=(<span class="hljs-string">'姓名'</span>,<span class="hljs-string">'语文'</span>,<span class="hljs-string">'数学'</span>,<span class="hljs-string">'英语'</span>)<br>#<br># for index,title in <span class="hljs-built_in">enumerate</span>(titles):<br>#     sheet.<span class="hljs-built_in">write</span>(<span class="hljs-number">0</span>,index,title)<br>sheet=<span class="hljs-built_in">header_style</span>()<br><br>for row in <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(scores)):<br>    sheet.<span class="hljs-built_in">write</span>(row+<span class="hljs-number">1</span>,<span class="hljs-number">0</span>,student_names[row])<br>    for col in <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(scores[row])):<br>        sheet.<span class="hljs-built_in">write</span>(row+<span class="hljs-number">1</span>,col+<span class="hljs-number">1</span>,scores[row][col])<br>#保存工作簿<br>wb.<span class="hljs-built_in">save</span>(<span class="hljs-string">'考试成绩表.xls'</span>)<br></code></pre></td></tr></tbody></table></figure>
+<p>掌握了 Python 程序操作 Excel 的方法，可以解决日常办公中很多繁琐的处理 Excel 电子表格工作，最常见就是将多个数据格式相同的 Excel 文件合并到一个文件以及从多个 Excel 文件或表单中提取指定的数据。当然，如果要对表格数据进行处理，使用 Python 数据分析神器之一的 pandas 库可能更为方便。</p>
+<p>openpyxl读写Excel</p>
+<figure class="highlight routeros"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><code class="hljs routeros">import datetime<br>import random<br><br>import openpyxl<br><br><span class="hljs-attribute">wb</span>=openpyxl.load_workbook('2022年股票数据.xlsx')<br><span class="hljs-built_in">print</span>(wb.sheetnames)<br><span class="hljs-attribute">sheet</span>=wb.worksheets[0]<br><span class="hljs-built_in">print</span>(sheet.dimensions)<br><span class="hljs-built_in">print</span>(sheet.max_row,sheet.max_column)<br><br><span class="hljs-comment">#获取指定单元格的值</span><br><span class="hljs-built_in">print</span>(sheet.cell(3,3).value)<br><span class="hljs-built_in">print</span>(sheet[<span class="hljs-string">'C3'</span>].value)<br><span class="hljs-built_in">print</span>(sheet[<span class="hljs-string">'G255'</span>].value)<br><br><span class="hljs-built_in">print</span>(sheet[<span class="hljs-string">'A2:C5'</span>])<br><span class="hljs-comment">#读取所有单元格的内容</span><br><span class="hljs-keyword">for</span> row <span class="hljs-keyword">in</span> range(2,sheet.max_row+1):<br>    <span class="hljs-keyword">for</span> col_ch <span class="hljs-keyword">in</span> <span class="hljs-string">'ABCDEFG'</span>:<br>        <span class="hljs-attribute">value</span>=sheet[f<span class="hljs-string">'{col_ch}{row}'</span>].value<br>        <span class="hljs-keyword">if</span> type(value)==datetime.datetime:<br>            <span class="hljs-built_in">print</span>(value.strftime(<span class="hljs-string">'%Y年%m月%d'</span>),<span class="hljs-attribute">end</span>=<span class="hljs-string">'\t'</span>)<br>        elif type(value)==int:<br>            <span class="hljs-built_in">print</span>(f<span class="hljs-string">'{value:&lt;10d}'</span>,<span class="hljs-attribute">end</span>=<span class="hljs-string">'\t'</span>)<br>        elif type(value)==float:<br>            <span class="hljs-built_in">print</span>(f<span class="hljs-string">'{value:.4F}'</span>,<span class="hljs-attribute">end</span>=<span class="hljs-string">'\t'</span>)<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-built_in">print</span>(value)<br>    <span class="hljs-built_in">print</span>()<br><br><span class="hljs-attribute">wb</span>=openpyxl.Workbook()<br><span class="hljs-attribute">sheet</span>=wb.active<br>sheet.<span class="hljs-attribute">title</span>=<span class="hljs-string">'期末成绩'</span><br>titles=(<span class="hljs-string">'姓名'</span>,<span class="hljs-string">'语文'</span>,<span class="hljs-string">'数学'</span>,<span class="hljs-string">'英语'</span>)<br><span class="hljs-keyword">for</span> col_index,title <span class="hljs-keyword">in</span> enumerate(titles):<br>    sheet.cell(1,col_index+1,title)<br><br>names= (<span class="hljs-string">'关羽'</span>, <span class="hljs-string">'张飞'</span>, <span class="hljs-string">'赵云'</span>, <span class="hljs-string">'马超'</span>, <span class="hljs-string">'黄忠'</span>)<br><span class="hljs-keyword">for</span> row_index,name <span class="hljs-keyword">in</span> enumerate(names):<br>    sheet.cell(row_index+2,1,name)<br>    <span class="hljs-keyword">for</span> col_index <span class="hljs-keyword">in</span> range(2,5):<br>        sheet.cell(row_index+2,col_index,random.randrange(50,101))<br><br>wb.save(<span class="hljs-string">'考试成绩表.xlsx'</span>)<br></code></pre></td></tr></tbody></table></figure>
+<h3 id="5、操作Word文件">5、操作Word文件</h3>
+<figure class="highlight routeros"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-keyword">from</span> docx import Document<br><span class="hljs-keyword">from</span> docx.shared import Pt, Cm<br><br><span class="hljs-attribute">document</span>=Document() # type: Doc<br>document.add_heading(<span class="hljs-string">'快快乐乐学Python'</span>,0)<br><span class="hljs-attribute">p</span>=document.add_paragraph('Python是一门非常流行的语言，它')<br><span class="hljs-attribute">run</span>=p.add_run('简单')<br>run.<span class="hljs-attribute">bold</span>=<span class="hljs-literal">True</span><br>run.font.<span class="hljs-attribute">size</span>=Pt(18)<br>p.add_run(<span class="hljs-string">'而且'</span>)<br><span class="hljs-attribute">run</span>=p.add_run('优雅')<br>run.font.<span class="hljs-attribute">size</span>=Pt(18)<br>run.<span class="hljs-attribute">underline</span>=<span class="hljs-literal">True</span><br>p.add_run(<span class="hljs-string">'。'</span>)<br><span class="hljs-comment">#添加一级标题</span><br>document.add_heading(<span class="hljs-string">'Heading,leven 1'</span>,<span class="hljs-attribute">level</span>=1)<br>document.add_paragraph(<span class="hljs-string">'Intense quote'</span>,<span class="hljs-attribute">style</span>=<span class="hljs-string">'Intense Quote'</span>)<br><span class="hljs-comment">#添加无序列表</span><br>document.add_paragraph(<span class="hljs-string">'first item in unordered list'</span>,<span class="hljs-attribute">style</span>=<span class="hljs-string">'List Bullet'</span>)<br>document.add_paragraph(<span class="hljs-string">'second item in unordered list'</span>,<span class="hljs-attribute">style</span>=<span class="hljs-string">'List Bullet'</span>)<br><span class="hljs-comment">#添加有序列表</span><br>document.add_paragraph(<span class="hljs-string">'first item in ordered list'</span>,<span class="hljs-attribute">style</span>=<span class="hljs-string">'List Number'</span>)<br>document.add_paragraph(<span class="hljs-string">'second item in ordered list'</span>,<span class="hljs-attribute">style</span>=<span class="hljs-string">'List Number'</span>)<br><span class="hljs-comment">#添加图片</span><br>document.add_picture(<span class="hljs-string">'泷.jpg'</span>,<span class="hljs-attribute">width</span>=Cm(5.2))<br><span class="hljs-comment">#添加分节符</span><br>document.add_section()<br>records=(<br>    (<span class="hljs-string">'罗汉'</span>,<span class="hljs-string">'男'</span>,<span class="hljs-string">'1999-10-11'</span>),<br>    (<span class="hljs-string">'李大元'</span>,<span class="hljs-string">'女'</span>,<span class="hljs-string">'1999-10-12'</span>),<br>)<br><span class="hljs-comment">#添加表格</span><br>table =document.add_table(<span class="hljs-attribute">rows</span>=1,cols=3)<br>table.<span class="hljs-attribute">style</span>=<span class="hljs-string">'Dark List'</span><br>hdr_cells = table.rows[0].cells<br>hdr_cells[0].<span class="hljs-attribute">text</span>=<span class="hljs-string">'姓名'</span><br>hdr_cells[1].<span class="hljs-attribute">text</span>=<span class="hljs-string">'性别'</span><br>hdr_cells[2].<span class="hljs-attribute">text</span>=<span class="hljs-string">'出生日期'</span><br><span class="hljs-comment">#为表格添加行</span><br><span class="hljs-keyword">for</span> name,sex,birthday <span class="hljs-keyword">in</span> records:<br>    row_cells = table.add_row().cells<br>    row_cells[0].<span class="hljs-attribute">text</span>=name<br>    row_cells[1].<span class="hljs-attribute">text</span>=sex<br>    row_cells[2].<span class="hljs-attribute">text</span>=birthday<br><span class="hljs-comment">#添加分页符</span><br>document.add_page_break()<br><span class="hljs-comment">#保存文档</span><br>document.save(<span class="hljs-string">'demo.docx'</span>)<br><br><br></code></pre></td></tr></tbody></table></figure>
+<p>遍历word文件</p>
+<figure class="highlight routeros"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-attribute">doc</span>=Document('demo.docx')<br><span class="hljs-keyword">for</span> <span class="hljs-literal">no</span>,p <span class="hljs-keyword">in</span> enumerate(doc.paragraphs):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-literal">no</span>,p.text)<br></code></pre></td></tr></tbody></table></figure>
+<h3 id="6、操作PDF文件">6、操作PDF文件</h3>
+<h3 id="7、python处理图像">7、python处理图像</h3>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> PIL <span class="hljs-keyword">import</span> Image, ImageFilter<br><br>image=Image.<span class="hljs-built_in">open</span>(<span class="hljs-string">'泷.jpg'</span>)<br><span class="hljs-built_in">print</span>(image.<span class="hljs-built_in">format</span>)<br><span class="hljs-built_in">print</span>(image.size)<br><span class="hljs-built_in">print</span>(image.mode)<br>image.show()<br><br><span class="hljs-comment">#裁剪图像</span><br><span class="hljs-comment"># image.crop((80,20,310,360)).show()</span><br><span class="hljs-comment">#生成缩略图</span><br>image.thumbnail((<span class="hljs-number">128</span>,<span class="hljs-number">128</span>))<br><span class="hljs-comment"># image.show()</span><br><span class="hljs-comment">#缩放和粘贴图像</span><br>luoao_image=Image.<span class="hljs-built_in">open</span>(<span class="hljs-string">'泷.jpg'</span>)<br>guido_image=Image.<span class="hljs-built_in">open</span>(<span class="hljs-string">'泷.jpg'</span>)<br>head=guido_image.crop((<span class="hljs-number">80</span>,<span class="hljs-number">20</span>,<span class="hljs-number">310</span>,<span class="hljs-number">360</span>))<br>width,height=head.size<br>image.paste(head.resize((<span class="hljs-built_in">int</span>(width/<span class="hljs-number">1.5</span>),<span class="hljs-built_in">int</span>(height/<span class="hljs-number">1.5</span>))),(<span class="hljs-number">172</span>,<span class="hljs-number">40</span>))<br>image.show()<br><br>image=Image.<span class="hljs-built_in">open</span>(<span class="hljs-string">'泷.jpg'</span>)<br>image.rotate(<span class="hljs-number">45</span>).show()<br>image.transpose(Image.FLIP_TOP_BOTTOM).show()<br><br><span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">80</span>,<span class="hljs-number">310</span>):<br>    <span class="hljs-keyword">for</span> y <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">20</span>,<span class="hljs-number">360</span>):<br>        image.putpixel((x,y),(<span class="hljs-number">255</span>,<span class="hljs-number">255</span>,<span class="hljs-number">255</span>))<br>image.show()<br><br><span class="hljs-comment">#滤镜效果</span><br>image.<span class="hljs-built_in">filter</span>(ImageFilter.CONTOUR).show()<br></code></pre></td></tr></tbody></table></figure>
+<h3 id="使用Pillow绘图">使用Pillow绘图</h3>
+<p>Pillow 中有一个名为<code>ImageDraw</code>的模块，该模块的<code>Draw</code>函数会返回一个<code>ImageDraw</code>对象，通过<code>ImageDraw</code>对象的<code>arc</code>、<code>line</code>、<code>rectangle</code>、<code>ellipse</code>、<code>polygon</code>等方法，可以在图像上绘制出圆弧、线条、矩形、椭圆、多边形等形状，也可以通过该对象的<code>text</code>方法在图像上添加文字。</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> random<br><span class="hljs-keyword">from</span> PIL <span class="hljs-keyword">import</span> Image,ImageDraw,ImageFont<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">random_color</span>():<br>    <span class="hljs-string">"""生成随机颜色"""</span><br>    r = random.randint(<span class="hljs-number">0</span>,<span class="hljs-number">255</span>)<br>    g = random.randint(<span class="hljs-number">0</span>,<span class="hljs-number">255</span>)<br>    b = random.randint(<span class="hljs-number">0</span>,<span class="hljs-number">255</span>)<br>    <span class="hljs-keyword">return</span> (r,g,b)<br>width,height=<span class="hljs-number">800</span>,<span class="hljs-number">600</span><br>image=Image.new(<span class="hljs-string">'RGB'</span>,(width,height),color=(<span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>))<br>drawer=ImageDraw.Draw(image)<br>font=ImageFont.truetype(<span class="hljs-string">'楷体_GB2312.ttf'</span>,<span class="hljs-number">32</span>)<br>drawer.text((<span class="hljs-number">300</span>,<span class="hljs-number">50</span>),<span class="hljs-string">'Hello'</span>,font=font,fill=(<span class="hljs-number">255</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>))<br>drawer.line((<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,width,height),fill=(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">255</span>),width=<span class="hljs-number">2</span>)<br>drawer.line((width,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,height),fill=(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">255</span>),width=<span class="hljs-number">2</span>)<br>xy=width//<span class="hljs-number">2</span>-<span class="hljs-number">60</span>,height//<span class="hljs-number">2</span>-<span class="hljs-number">60</span>,width//<span class="hljs-number">2</span>+<span class="hljs-number">60</span>,height//<span class="hljs-number">2</span>+<span class="hljs-number">60</span><br>drawer.rectangle(xy,outline=(<span class="hljs-number">255</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>),width=<span class="hljs-number">2</span>)<br><br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">4</span>):<br>    left,top,right,bottom=<span class="hljs-number">150</span>+i*<span class="hljs-number">120</span>,<span class="hljs-number">220</span>,<span class="hljs-number">310</span>+i*<span class="hljs-number">120</span>,<span class="hljs-number">380</span><br>    drawer.ellipse((left,top,right,bottom),outline=random_color(),width=<span class="hljs-number">8</span>)<br><br><span class="hljs-comment">#显示图像</span><br>image.show()<br>image.save(<span class="hljs-string">'result.png'</span>)<br></code></pre></td></tr></tbody></table></figure>
+<blockquote>
+<p><strong>注意</strong>：上面代码中使用的字体文件需要根据自己准备，可以选择自己喜欢的字体文件并放置在代码目录下。</p>
+</blockquote>
+<h3 id="总结">总结</h3>
+<p>使用 Python 语言做开发，除了可以用 Pillow 来处理图像外，还可以使用更为强大的 OpenCV 库来完成图形图像的处理，OpenCV（<strong>Open</strong> Source <strong>C</strong>omputer <strong>V</strong>ision Library）是一个跨平台的计算机视觉库，可以用来开发实时图像处理、计算机视觉和模式识别程序。在我们的日常工作中，有很多繁琐乏味的任务其实都可以通过 Python 程序来处理，编程的目的就是让计算机帮助我们解决问题，减少重复乏味的劳动。通过本章节的学习，相信大家已经感受到了使用 Python 程序绘图改图的乐趣，其实 Python 能做的事情还远不止这些，继续你的学习吧。</p>
+</body></html>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/python/" class="print-no-link">#python</a>
+      
+        <a href="/tags/%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99/" class="print-no-link">#文件读写</a>
+      
+        <a href="/tags/%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/" class="print-no-link">#异常处理</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>python文件读写和异常处理</div>
+      <div>http://example.com/2025/02/21/python文件读写和异常处理/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>zpqwe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年2月21日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/02/19/java%E7%BB%8F%E9%AA%8C%E5%BF%AB%E9%80%9F%E5%AD%A6%E4%B9%A0python%EF%BC%81/" title="java经验快速学习python！">
+                        <span class="hidden-mobile">java经验快速学习python！</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.4.17/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"TpxR1ejSmG0CzDF2fDPxTXKc-gzGzoHsz","appKey":"kJhIVleqaH3pwDpaJOqOCHAj","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        <i class='iconfont icon-eye'></i> 总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        <i class='iconfont icon-user'></i> 总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

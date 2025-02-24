@@ -25,7 +25,7 @@
 <meta property="og:site_name" content="曾平">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-02-18T03:38:53.000Z">
-<meta property="article:modified_time" content="2025-02-18T05:07:52.192Z">
+<meta property="article:modified_time" content="2025-02-24T08:29:13.888Z">
 <meta property="article:author" content="zpqwe">
 <meta property="article:tag" content="java锁机制">
 <meta property="article:tag" content="java集合">
@@ -236,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5.7k 字
+          6.7k 字
         
       </span>
     
@@ -247,7 +247,7 @@
         
         
         
-          48 分钟
+          56 分钟
         
       </span>
     
@@ -635,6 +635,60 @@
 </ul>
 </li>
 </ol>
+<h2 id="数据库">数据库</h2>
+<h2 id="达梦数据库和oracle有什么区别">达梦数据库和oracle有什么区别</h2>
+<p>达梦数据库（DM数据库）和Oracle数据库是两种不同的数据库管理系统，它们在多个方面存在显著的区别。以下是对两者主要差异的详细分析：</p>
+<h3 id="一、体系结构">一、体系结构</h3>
+<ul>
+<li>Oracle数据库采用多进程架构，包括PMON、SMON、DBWR、LGWR、CKPT、ARCn等多个进程。</li>
+<li>达梦数据库则采用单进程多线程架构，主进程是dmserver，包含checkpoint线程、I/O线程、监听线程、日志写线程等多个线程。</li>
+</ul>
+<h3 id="二、启动与状态转换">二、启动与状态转换</h3>
+<ul>
+<li>Oracle数据库可以从关闭状态经过nomount、mount到open状态。</li>
+<li>达梦数据库的状态转换相对灵活，除了mount和suspend之间不能直接转化外，其余状态可以任意转换。</li>
+</ul>
+<h3 id="三、安全性">三、安全性</h3>
+<ul>
+<li>Oracle数据库提供了安全控制和审计功能，支持细粒度的权限管理，并通过Profile机制控制用户资源使用。</li>
+<li>达梦数据库则采用参数PWD_POLICY管理密码策略，且在国密算法支持、国产化适配等方面有优势，符合国内安全合规要求。</li>
+</ul>
+<h3 id="四、表空间管理">四、表空间管理</h3>
+<ul>
+<li>在表空间管理上，两者都允许一个表空间包含多个数据文件，且一个数据文件只能属于一个表空间。但Oracle能对表空间或者数据文件进行offline操作，而达梦仅能对表空间进行offline。</li>
+<li>在数据文件迁移方面，Oracle在12c以前需要手动在操作系统层进行迁移，并在数据库层更改路径参数；而达梦通过一个命令即可在操作系统层完成整体迁移。</li>
+</ul>
+<h3 id="五、用户与模式">五、用户与模式</h3>
+<ul>
+<li>Oracle数据库的用户和模式（schema）是一一对应关系。</li>
+<li>达梦数据库则允许一个用户下拥有多个模式。</li>
+</ul>
+<h3 id="六、备份与恢复">六、备份与恢复</h3>
+<ul>
+<li>Oracle数据库的RMAN工具支持热备份，允许在数据库运行时进行备份。</li>
+<li>达梦数据库的RMAN可能仅支持冷备份，需要数据库处于非活动状态。但请注意，达梦数据库在进行热备时需要额外的配置或操作。</li>
+</ul>
+<h3 id="七、表与索引">七、表与索引</h3>
+<ul>
+<li>Oracle数据库默认创建的是堆表。</li>
+<li>达梦数据库默认创建的是索引组织表，这种表有且仅有一个聚簇索引键，表数据按照聚簇索引键排序。</li>
+</ul>
+<h3 id="八、SQL语法与管理工具">八、SQL语法与管理工具</h3>
+<ul>
+<li>两者在SQL语法上存在共通之处，但也存在一些差异。例如，在执行.sql脚本时，Oracle使用“@”符号，而达梦数据库使用“start”或者“`”符号。</li>
+<li>管理工具方面，Oracle使用SQL*Plus作为命令行工具，而达梦数据库使用DISQL。</li>
+</ul>
+<h3 id="九、其他功能特性">九、其他功能特性</h3>
+<ul>
+<li>Oracle数据库以其出色的性能优化技术和大规模部署能力著称，提供了诸如并行查询、分区表、自动工作负载管理等功能。</li>
+<li>达梦数据库则在对标Oracle的功能方面进行了优化和适配，如提供了DataWatch、DSC、DMHS等架构来对应Oracle的ADG、RAC、OGG等架构。</li>
+</ul>
+<h3 id="十、兼容性设置">十、兼容性设置</h3>
+<ul>
+<li>达梦数据库提供了与Oracle数据库的兼容性设置，如通过dm.ini配置文件中的相关参数来设置对Oracle日期格式的兼容性、PL/SQL异常处理中SQLCODE的错误码值一致性等。</li>
+<li>这些兼容性设置有助于简化从Oracle迁移到达梦数据库的过程，降低迁移成本和风险。</li>
+</ul>
+<p>综上所述，达梦数据库和Oracle数据库在体系结构、启动与状态转换、安全性、表空间管理、用户与模式、备份与恢复、表与索引、SQL语法与管理工具以及其他功能特性等方面都存在显著的差异。用户在选择数据库时，应根据自身的业务需求和系统环境进行综合考虑。</p>
 </body></html>
                 
               </div>

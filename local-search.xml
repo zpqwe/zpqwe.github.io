@@ -4,6 +4,27 @@
   
   
   <entry>
+    <title>拉取gitlab项目时出现500的错误的权限问题</title>
+    <link href="/2025/03/10/%E6%8B%89%E5%8F%96gitlab%E9%A1%B9%E7%9B%AE%E6%97%B6%E5%87%BA%E7%8E%B0500%E7%9A%84%E9%94%99%E8%AF%AF%E7%9A%84%E6%9D%83%E9%99%90%E9%97%AE%E9%A2%98/"/>
+    <url>/2025/03/10/%E6%8B%89%E5%8F%96gitlab%E9%A1%B9%E7%9B%AE%E6%97%B6%E5%87%BA%E7%8E%B0500%E7%9A%84%E9%94%99%E8%AF%AF%E7%9A%84%E6%9D%83%E9%99%90%E9%97%AE%E9%A2%98/</url>
+    
+    <content type="html"><![CDATA[<html><head></head><body><h2 id="Gitlab克隆代码">Gitlab克隆代码</h2><h3 id="font-color-red-我遇到的问题错误-font-："><strong><font color="red">我遇到的问题错误</font></strong>：</h3><p><font color="blue">remote: Internal server error<br>fatal: unable to access The requested URL returned error: 500</font></p><p><img src="https://typora-syn--csdn.oss-cn-shenzhen.aliyuncs.com/image-20250310173231009.png" alt="image-20250310173231009"></p><h3 id="问题解决步骤："><strong>问题解决步骤</strong>：</h3><h4 id="1、确定你可以浏览器访问到项目页面">1、确定你可以浏览器访问到项目页面</h4><h4 id="2、确定你的邮箱或账号已添加，有权限可以拉取项目">2、确定你的邮箱或账号已添加，有权限可以拉取项目</h4><p>经过以上2点，我可以确认是我自己本地的问题，通过查询相关资料，发现是ssh密钥没有设置。</p><h3 id="解决步骤"><strong>解决步骤</strong></h3><h4 id="本地拉取代码时生成ssh密钥：">本地拉取代码时生成ssh密钥：</h4><p>你的邮箱：</p><p>ssh-keygen -t rsa -C “<a href="mailto:your.email@example.com">your.email@example.com</a>” -b 4096</p><p>输入命令后，一直按回车，直到出现密钥生成的效果。</p><p><img src="https://typora-syn--csdn.oss-cn-shenzhen.aliyuncs.com/image-20250310172939243.png" alt="image-20250310172939243"></p><h4 id="密钥查看地址：">密钥查看地址：</h4><p>C:\Users\zpmei.ssh</p><p>打开这个文件，将里面的密钥复制到密钥粘贴框中</p><p><img src="https://typora-syn--csdn.oss-cn-shenzhen.aliyuncs.com/image-20250310180020571.png" alt="image-20250310180020571"></p><p><img src="https://typora-syn--csdn.oss-cn-shenzhen.aliyuncs.com/image-20250310175957675.png" alt="image-20250310175957675"></p><p>复制好之后，点击<strong>增加密钥</strong>。</p><p>2、输入命令，全局设置git本地的账号和邮箱</p><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs git">$ git config --global  user.name   "aaagpinga"<br>$ git config --global user.email   "aaagpinga@aaa.com"<br></code></pre></td></tr></tbody></table></figure><h4 id="此步骤完成之后，继续拉取，git-clone-“Your-Git-address”。">此步骤完成之后，继续拉取，git clone “Your Git address”。</h4><p><img src="https://typora-syn--csdn.oss-cn-shenzhen.aliyuncs.com/image-20250310180400748.png" alt="image-20250310180400748"></p><p><strong>至此，问题解决，git源码已拉取。</strong></p></body></html>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>gitlab</tag>
+      
+      <tag>git</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>docker-Compose工具使用</title>
     <link href="/2025/02/24/docker-Compose%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/"/>
     <url>/2025/02/24/docker-Compose%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/</url>
